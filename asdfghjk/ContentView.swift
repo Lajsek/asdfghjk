@@ -98,10 +98,13 @@ struct GameView: View {
                     VStack(alignment: .leading) {
                         QuestionView(viewModel: viewModel)
                         ForEach(0..<viewModel.currentQuestion.answers.count, id: \.self) { index in
-                            AnswerButtonView(answerText: viewModel.currentQuestion.answers[index]) {
-                                viewModel.checkAnswer(index)
+                           ForEach(0..<viewModel.currentQuestion.answers.count, id: \.self) { index in
+                                AnswerButtonView(answerText: viewModel.currentQuestion.answers[index],
+                                                 isCorrect: index == viewModel.currentQuestion.correctAnswerIndex) {
+                                    viewModel.checkAnswer(index)
+                                }
+                                .padding(.bottom, 8)
                             }
-                            .padding(.bottom, 8)
                         }
                     }
                     .padding()
@@ -190,27 +193,23 @@ import SwiftUI
 
 struct AnswerButtonView: View {
     let answerText: String
+    let isCorrect: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: {
-            action()
+            withAnimation {
+                action()
+            }
         }) {
             Text(answerText)
                 .padding()
                 .foregroundColor(.white)
-                .background(Color.blue)
+                .background(isCorrect ? Color.green : Color.red)
                 .cornerRadius(8)
         }
     }
 }
-
-struct AnswerButtonView_Previews: PreviewProvider {
-    static var previews: some View {
-        AnswerButtonView(answerText: "Odpowiedź A", action: {})
-    }
-}
-
 
 import SwiftUI
 
@@ -250,6 +249,8 @@ struct LadderItemView: View {
             Text("\(money) zł")
                 .foregroundColor(isCurrent ? .yellow : .white)
         }
+        .scaleEffect(isCurrent ? 1.2 : 1.0)
+        .animation(.easeInOut)
     }
 }
 
