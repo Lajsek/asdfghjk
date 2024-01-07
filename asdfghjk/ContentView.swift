@@ -121,14 +121,9 @@ struct GameView: View {
                     .padding()
             }
 
-            if viewModel.showGameOver {
-                Text("Koniec gry. Zdobyłeś \(viewModel.totalMoney) zł.")
-                    .foregroundColor(.red)
-                    .font(.headline)
-                    .padding()
-                Button("Zagraj ponownie") {
-                    viewModel.resetGame()
-                }
+            
+            NavigationLink(destination: GameOverView(viewModel: viewModel), isActive: $viewModel.showGameOver) {
+                EmptyView()
             }
         }
     }
